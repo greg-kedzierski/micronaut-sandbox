@@ -10,13 +10,15 @@ public class FooBarBazBeanFactory {
     @Prototype
     public Bar engine(InjectionPoint<?> injectionPoint) {
         var barType = injectionPoint.getAnnotationMetadata()
-                .enumValue(BarType.class, BarType.Type.class)
-                .orElseThrow();
+                .enumValue(BarType.class, BarType.Type.class);
 
-        return switch (barType) {
-            case SMALL -> () -> "smaller";
-            case BIG -> () -> "bigger";
-        };
+        return barType
+                .<Bar>map(type ->
+                        switch (type) {
+                            case SMALL -> () -> "smaller";
+                            case BIG -> () -> "bigger";
+                        })
+                .orElseGet(() -> () -> "def");
     }
 
     @Prototype
