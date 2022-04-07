@@ -9,12 +9,13 @@ public class FooBarBazBeanFactory {
 
     @Prototype
     public Bar engine(InjectionPoint<?> injectionPoint) {
-        var barType = injectionPoint.getAnnotationMetadata().enumValue(BarType.class, BarType.Type.class)
+        var barType = injectionPoint.getAnnotationMetadata()
+                .enumValue(BarType.class, BarType.Type.class)
                 .orElseThrow();
 
         return switch (barType) {
-            case SMALL -> new BarSmall();
-            case BIG -> new BarBig();
+            case SMALL -> () -> "smaller";
+            case BIG -> () -> "bigger";
         };
     }
 
